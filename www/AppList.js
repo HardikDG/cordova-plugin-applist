@@ -7,3 +7,7 @@ exports.applist = function (success, error) {
 exports.appicon = function (pkg, success, error) {
 	exec(success, error, 'AppList', 'appicon', [pkg]);
 };
+
+exports.appstart = function (pkg, success, error) {
+	exec(success, error, 'AppList', 'appstart', [pkg]);
+};

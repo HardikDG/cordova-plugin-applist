@@ -1,12 +1,13 @@
 package org.apache.cordova;
 
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.Bitmap;
 import android.util.Base64;
+import android.content.Intent;
+import android.content.Context;
 
 import java.io.File;
 import java.io.ByteArrayOutputStream;
@@ -45,6 +46,12 @@ public class AppList extends CordovaPlugin {
 					} });
 			return true;
 		} 
+		else if ("appstart".equals(action)) {
+			this.cordova.getThreadPool().execute(new Runnable() { public void run() {
+					appstart(args, callbackContext);
+					} });
+			return true;
+		} 		
 		return false;
 	}
 
@@ -107,6 +114,25 @@ public class AppList extends CordovaPlugin {
 
 		} catch (Exception e) {
 			String errorMessage = "Can't retrieve app icon";
+			callbackContext.error(errorMessage);
+			Log.e(LOG_TAG, errorMessage, e);
+		} finally {
+		}
+	}
+
+	private void appstart(CordovaArgs args, CallbackContext callbackContext) {
+		try {
+			String pkg= args.getString(0);
+			Intent intent = Pm.getLaunchIntentForPackage(pkg);
+			if (intent != null) {
+				this.cordova.getActivity().startActivity(intent);
+				callbackContext.success("OK");
+			}
+			else {
+				callbackContext.error("Can't launch app, no intent");
+			}
+		} catch (Exception e) {
+			String errorMessage = "Can't launch app";
 			callbackContext.error(errorMessage);
 			Log.e(LOG_TAG, errorMessage, e);
 		} finally {
