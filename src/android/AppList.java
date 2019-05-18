@@ -84,10 +84,10 @@ public class AppList extends CordovaPlugin {
 					File mApkFile = new File(app.sourceDir);
 					if (mApkFile.exists()) { //A: is mounted
 						CharSequence labelcs = app.loadLabel(Pm);
-						label = labelcs != null ? label.toString() : pkg;
+						label = labelcs != null ? labelcs.toString() : pkg;
 					}
 					else {
-						Log.e(LOG_TAG, "app not found "+pkg+" "+app.sourceDir);
+						Log.w(LOG_TAG, "app not found "+pkg+" "+app.sourceDir);
 					}
 					r.put(pkg, label);
 				}
