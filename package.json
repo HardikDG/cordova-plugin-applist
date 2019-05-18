@@ -1,0 +1,23 @@
+{
+  "name": "cordova-plugin-applist",
+  "version": "3.1.0",
+  "description": "List installed apps",
+  "cordova": {
+    "id": "cordova-plugin-applist",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.3.0"
+    }
+  ],
+  "author": "",
+  "license": "MIT"
+}

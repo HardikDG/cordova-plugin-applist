@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugins-applist" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+	<name>AppList</name>
+	<js-module name="AppList" src="www/AppList.js">
+			<clobbers target="cordova.plugins.AppList" />
+	</js-module>
+
+  <platform name="android">
+    <source-file src="src/android/AppList.java" target-dir="src/org/apache/cordova" />
+    <config-file target="res/xml/config.xml" parent="/widget">
+      <feature name="AppList">
+        <param name="android-package" value="org.apache.cordova.AppList"/>
+      </feature>
+    </config-file>
+  </platform>
+</plugin>
