@@ -192,7 +192,7 @@ public class AppList extends CordovaPlugin {
 			}
 		}
 		else {
-			Log.e(LOG_TAG,"pkg file not found: "+pkg+" "+app.sourceDir);
+			Log.e(LOG_TAG,"pkg file not found: "+app.sourceDir);
 		}
 		//A: si estaba disponible (ej. en la SD) devolvimos el icono
 
