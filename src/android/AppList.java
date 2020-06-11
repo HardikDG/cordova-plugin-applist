@@ -97,9 +97,9 @@ public class AppList extends CordovaPlugin {
 					pkgsWithIcon.put(pkg, pkgsWithIcon);
 				}
 			}
-			r.put('apps', pkgs);
-			r.put('icons', pkgsWithIcon);
-			r.put('totalApp', apps.size());
+			r.put("apps", pkgs);
+			r.put("icons", pkgsWithIcon);
+			r.put("totalApp", apps.size());
 			callbackContext.success(r);
 		} catch (Exception e) {
 			String errorMessage = "Can't retrieve app list";
