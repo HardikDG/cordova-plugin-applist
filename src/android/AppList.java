@@ -76,7 +76,6 @@ public class AppList extends CordovaPlugin {
 
 			JSONObject r = new JSONObject();
 			JSONObject pkgs = new JSONObject();
-			JSONObject pkgsWithIcon = new JSONObject();
 			for (int i = 0; i < apps.size(); i++) {
 				ApplicationInfo app= apps.get(i);
 				String pkg = app.packageName;
@@ -94,7 +93,7 @@ public class AppList extends CordovaPlugin {
 					JSONObject appInfo = new JSONObject();
                     appInfo.put("name", label);
                     appInfo.put("icon", getIcon(app));
-                    allPkgs.put(pkg, appInfo);
+                    pkgs.put(pkg, appInfo);
 				}
 			}
 			r.put("apps", pkgs);
