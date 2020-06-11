@@ -91,14 +91,13 @@ public class AppList extends CordovaPlugin {
 					else {
 						Log.w(LOG_TAG, "app not found "+pkg+" "+app.sourceDir);
 					}
-					Bitmap icon =  getIcon(app);
-					JSONObject pkgWithIcon = new JSONObject();
-					pkgs.put(pkg, label);
-					pkgsWithIcon.put(pkg, pkgsWithIcon);
+					JSONObject appInfo = new JSONObject();
+                    appInfo.put("name", label);
+                    appInfo.put("icon", getIcon(app));
+                    allPkgs.put(pkg, appInfo);
 				}
 			}
 			r.put("apps", pkgs);
-			r.put("icons", pkgsWithIcon);
 			r.put("totalApp", apps.size());
 			callbackContext.success(r);
 		} catch (Exception e) {
@@ -180,23 +179,28 @@ public class AppList extends CordovaPlugin {
 		return null;
 	}
 
-	private Bitmap getIcon(ApplicationInfo app) {
-		File mApkFile = new File(app.sourceDir);
-		if (mApkFile.exists()) {
-			Drawable mIcon = app.loadIcon(Pm);
-			if (mIcon instanceof BitmapDrawable) {
-				BitmapDrawable bitmapDrawable = (BitmapDrawable) mIcon;
-				if(bitmapDrawable.getBitmap() != null) {
-					return bitmapDrawable.getBitmap();
-				}
-			}
-		}
-		else {
-			Log.e(LOG_TAG,"pkg file not found: "+app.sourceDir);
-		}
-		//A: si estaba disponible (ej. en la SD) devolvimos el icono
+	private String getIcon(ApplicationInfo app) {
+        File mApkFile = new File(app.sourceDir);
+        if (mApkFile.exists()) {
+            Drawable mIcon = app.loadIcon(Pm);
+            if (mIcon instanceof BitmapDrawable) {
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) mIcon;
+                if(bitmapDrawable.getBitmap() != null) {
+                    Bitmap bmp = bitmapDrawable.getBitmap();
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    return encoded;
+                }
+            }
+        }
+        else {
+            Log.e(LOG_TAG,"pkg file not found: "+app.packageName);
+        }
+        //A: si estaba disponible (ej. en la SD) devolvimos el icono
 
-		return null;
-	}
+        return "";
+    }
 
 }
