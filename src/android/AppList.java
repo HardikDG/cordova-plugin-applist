@@ -75,6 +75,8 @@ public class AppList extends CordovaPlugin {
 			applist_load(true);
 
 			JSONObject r = new JSONObject();
+			JSONObject pkgs = new JSONObject();
+			JSONObject pkgsWithIcon = new JSONObject();
 			for (int i = 0; i < apps.size(); i++) {
 				ApplicationInfo app= apps.get(i);
 				String pkg = app.packageName;
@@ -89,10 +91,15 @@ public class AppList extends CordovaPlugin {
 					else {
 						Log.w(LOG_TAG, "app not found "+pkg+" "+app.sourceDir);
 					}
-					r.put(pkg, label);
+					Bitmap icon =  getIcon(app);
+					JSONObject pkgWithIcon = new JSONObject();
+					pkgs.put(pkg, label);
+					pkgsWithIcon.put(pkg, pkgsWithIcon);
 				}
 			}
-
+			r.put('apps', pkgs);
+			r.put('icons', pkgsWithIcon);
+			r.put('totalApp', apps.size());
 			callbackContext.success(r);
 		} catch (Exception e) {
 			String errorMessage = "Can't retrieve app list";
@@ -157,6 +164,25 @@ public class AppList extends CordovaPlugin {
 		File mApkFile = new File(app.sourceDir);
 		if (mApkFile.exists()) {
 			//A: esta montada la app (SD, etc.)
+			Drawable mIcon = app.loadIcon(Pm);
+			if (mIcon instanceof BitmapDrawable) {
+				BitmapDrawable bitmapDrawable = (BitmapDrawable) mIcon;
+				if(bitmapDrawable.getBitmap() != null) {
+					return bitmapDrawable.getBitmap();
+				}
+			}
+		}
+		else {
+			Log.e(LOG_TAG,"pkg file not found: "+pkg+" "+app.sourceDir);
+		}
+		//A: si estaba disponible (ej. en la SD) devolvimos el icono
+
+		return null;
+	}
+
+	private Bitmap getIcon(ApplicationInfo app) {
+		File mApkFile = new File(app.sourceDir);
+		if (mApkFile.exists()) {
 			Drawable mIcon = app.loadIcon(Pm);
 			if (mIcon instanceof BitmapDrawable) {
 				BitmapDrawable bitmapDrawable = (BitmapDrawable) mIcon;

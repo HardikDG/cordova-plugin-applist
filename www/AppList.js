@@ -1,13 +1,12 @@
-var exec = require('cordova/exec');
-
-exports.applist = function (success, error) {
-	exec(success, error, 'AppList', 'applist', []);
+var AppList = {
+	applist : function (success, error) {
+		cordova.exec((success, error, 'AppList', 'applist', []));
+	},
+	appicon: function (pkg, success, error) {
+		cordova.exec((success, error, 'AppList', 'appicon', [pkg]));
+	},
+	appstart: function (pkg, success, error) {
+		cordova.exec((success, error, 'AppList', 'appstart', [pkg]));
+	}
 };
-
-exports.appicon = function (pkg, success, error) {
-	exec(success, error, 'AppList', 'appicon', [pkg]);
-};
-
-exports.appstart = function (pkg, success, error) {
-	exec(success, error, 'AppList', 'appstart', [pkg]);
-};
+module.exports = AppList;
