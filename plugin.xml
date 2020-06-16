@@ -4,6 +4,15 @@
 	<js-module name="AppList" src="www/AppList.js">
 			<clobbers target="cordova.plugins.AppList" />
 	</js-module>
+  <platform name="ios">
+    <config-file target="config.xml" parent="/widget">
+        <feature name="AppList">
+            <param name="ios-package" value="AppList" />
+        </feature>
+    </config-file>
+    <header-file src="src/ios/AppList.h" />
+    <source-file src="src/ios/AppList.m" />
+</platform>
 
   <platform name="android">
     <source-file src="src/android/AppList.java" target-dir="src/org/apache/cordova" />
