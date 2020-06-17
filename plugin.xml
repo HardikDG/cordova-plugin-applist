@@ -5,7 +5,7 @@
 			<clobbers target="cordova.plugins.AppList" />
 	</js-module>
   <platform name="ios">
-    <config-file target="config.xml" parent="/widget">
+    <config-file target="config.xml" parent="/*">
         <feature name="AppList">
             <param name="ios-package" value="AppList" />
         </feature>
