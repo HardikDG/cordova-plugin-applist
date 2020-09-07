@@ -18,9 +18,11 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaResourceApi.OpenForReadResult;
 import org.apache.cordova.PluginResult;
+import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
+import android.graphics.Canvas;
 
 import android.util.Log;
 
@@ -75,7 +77,7 @@ public class AppList extends CordovaPlugin {
 			applist_load(true);
 
 			JSONObject r = new JSONObject();
-			JSONObject pkgs = new JSONObject();
+			JSONArray pkgs = new JSONArray();
 			for (int i = 0; i < apps.size(); i++) {
 				ApplicationInfo app= apps.get(i);
 				String pkg = app.packageName;
@@ -91,9 +93,10 @@ public class AppList extends CordovaPlugin {
 						Log.w(LOG_TAG, "app not found "+pkg+" "+app.sourceDir);
 					}
 					JSONObject appInfo = new JSONObject();
-                    appInfo.put("name", label);
-                    appInfo.put("icon", getIcon(app));
-                    pkgs.put(pkg, appInfo);
+                    appInfo.put("appName", label);
+                    appInfo.put("appIcon", getIcon(app));
+					appInfo.put("bundleId", pkg);
+                    pkgs.put(appInfo);
 				}
 			}
 			r.put("apps", pkgs);
@@ -178,6 +181,15 @@ public class AppList extends CordovaPlugin {
 		return null;
 	}
 
+	@NonNull
+	private Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
+		final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+		final Canvas canvas = new Canvas(bmp);
+		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+		drawable.draw(canvas);
+		return bmp;
+	}
+
 	private String getIcon(ApplicationInfo app) {
         File mApkFile = new File(app.sourceDir);
         if (mApkFile.exists()) {
@@ -192,7 +204,16 @@ public class AppList extends CordovaPlugin {
                     String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
                     return encoded;
                 }
-            }
+            } else {
+				if(mIcon instanceof Drawable) {
+				Bitmap bmp = getBitmapFromDrawable(mIcon);
+					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+					bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+					byte[] byteArray = byteArrayOutputStream .toByteArray();
+					String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+					return encoded;
+				}
+			}
         }
         else {
             Log.e(LOG_TAG,"pkg file not found: "+app.packageName);
