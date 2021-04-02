@@ -81,6 +81,7 @@ public class AppList extends CordovaPlugin {
 			for (int i = 0; i < apps.size(); i++) {
 				ApplicationInfo app= apps.get(i);
 				String pkg = app.packageName;
+//				Log.w(LOG_TAG, context.getPackageManager().getInstallerPackageName(app.packageName));
 				if (Pm.getLaunchIntentForPackage(pkg) != null) {
 					//A: only apps which are launchable
 					String label= pkg;
@@ -92,11 +93,15 @@ public class AppList extends CordovaPlugin {
 					else {
 						Log.w(LOG_TAG, "app not found "+pkg+" "+app.sourceDir);
 					}
-					JSONObject appInfo = new JSONObject();
-                    appInfo.put("appName", label);
-                    appInfo.put("appIcon", getIcon(app));
-					appInfo.put("bundleId", pkg);
-                    pkgs.put(appInfo);
+
+//					Log.w(LOG_TAG,"package: " + context.getPackageManager().getInstallerPackageName(pkg));
+//					if(("package: "+  context.getPackageManager().getInstallerPackageName(pkg)).equals("package: com.android.vending")) {
+						JSONObject appInfo = new JSONObject();
+						appInfo.put("appName", label);
+						appInfo.put("appIcon", getIcon(app));
+						appInfo.put("bundleId", pkg);
+						pkgs.put(appInfo);
+//					}
 				}
 			}
 			r.put("apps", pkgs);
@@ -222,5 +227,7 @@ public class AppList extends CordovaPlugin {
 
         return "";
     }
+
+
 
 }
